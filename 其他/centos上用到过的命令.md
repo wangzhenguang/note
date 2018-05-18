@@ -1,4 +1,3 @@
-<a>centos 7防火墙相关命令</a>
 
 
 ### centos7关闭默认防火墙，启用ipatables
@@ -60,9 +59,6 @@ systemctl disable firewalld.service
 
 # 设置防火墙开机自启
 systemctl enable firewalld
-
-
-
 
 # 开启端口
 firewall-cmd --zone=public --add-port=80/tcp --permanent
