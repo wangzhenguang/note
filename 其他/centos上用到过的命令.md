@@ -1,4 +1,4 @@
-[TOC]
+<a>centos 7防火墙相关命令</a>
 
 
 ### centos7关闭默认防火墙，启用ipatables
