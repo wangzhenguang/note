@@ -9,7 +9,7 @@ core-site.xml
 <property>
     <!-- 指定hadoop所使用的文件系统 namenode地址-->
     <name>fs.defaultFS</name>
-    <value>hdfs://hdfsname:port</value>
+    <value>hdfs://host:port</value>
     <!--指定hadoop运行时产生文件的存储目录-->
     <name>hadoop.tmp.dir</name>
     <value>dir path</value>
@@ -47,7 +47,7 @@ yarn-site.xml
     <!--指定resource manager 地址-->
 <property>
     <name>yarn.resourcemanager.hostname</name>
-    <value>hdfsname</value>
+    <value>host</value>
 </property>
 <!-- reducer获取数据方式-->
 <property>
@@ -104,15 +104,21 @@ http://192.168.1.101:8088 （MR管理界面）
 
 
 
+hdfs
+---
+```
+hadoop fs -ls /
+hadoop fs -cat file
+hadoop fs -put file /
+fs -moveFromLocal #本地拷贝到hdfs
+fs -moveToLocal #hdfs到本地
+fs -appendToFile # 追加一个文件到文件末尾
+fs -copyToLocal
+fs -getmerge #合并文件
 
+```
 
-
-
-
-
-
-
-
+hadoop jar hadoop-mapreduce-examples.jar wordcount /wordcount/input /wordcount/output
 
 
 
