@@ -126,10 +126,33 @@ hadoop jar hadoop-mapreduce-examples.jar wordcount /wordcount/input /wordcount/o
 
 
 
+datanode
+---
 
+定期向namenode汇报自身所持有的block信息
+```xml
+<property>
+<name>dfs.blockreport.intervalMsec</name>
+<value>3600000</value>
+</property>
+```
 
+datanode掉线判断时限参数
 
-
+```xml
+<property>
+    <name>hearbeat.recheck.interval</name>
+    <value>2000</value>   
+    <!-- 毫秒-->
+</property>
+<property>
+    <name>dfs.heartbeat.i nterval</name>
+    <value>1</value>
+    <!-- 秒-->
+</property>
+```
+> datanode进程死亡或者异常时，namenode不会立即判定为死亡。需要经过一段时间，这段时间暂称为超时时长。
+hdfs默认超时时长为10分钟+30秒。公式 timeout = 2 * heartbeat.recheck.interval + 10 * dfs.heartbeat.interval
 
 
 
