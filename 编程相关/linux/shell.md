@@ -218,3 +218,17 @@ cat /etc/passwd | awk -F ':' 'BEGIN {print "name,shell"}' '{print $1"\t"$7}' END
 
 ```
 
+### curl 
+-d http post方式传送数据
+-F 模拟http表单提交
+-c file 操作结束后把cookie写入到这个文件中
+-D header信息写入文件中
+-b string/file cookie字符串或文件读取位置
+-o file  指定文件输出名
+
+
+``` 
+curl -D cookie -d 'username=test&password=123' 'http://www.xxx'
+culr -b cookie -o download.file 'url'
+
+```
