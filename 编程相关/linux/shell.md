@@ -16,14 +16,20 @@
  
  ### 将命令的返回值赋给变量
  a=`ls -la` 
+ 
  a=$(ls -la)
  
  ### shell中的特殊变量
  $? 上一个命令的返回值
+ 
  $$ 表示当前进程编号
+ 
  $0 表示当前脚本名称
+ 
  $n 表示n位置的输入参数（n代表数字，n>=1)
+ 
  $# 表示变量的个数，常用语循环
+ 
  $*、$@ 表示参数列表
  `
   当$*被"" 包含时，$*会把参数当做一个整体  $@保持不变 
@@ -40,6 +46,7 @@
 
  ### for
  
+ ``` 
  for I in 123
  do
     echo $I
@@ -54,7 +61,7 @@
  done
  
  for((i=0;i<=3;i++));do echo $i;done
- 
+ ```
  ### while
 ```
 while 表达式
@@ -109,20 +116,35 @@ fi
 ```
 
 = 字符串比较
+
 -lt 小于
+
 -le 小于等于
+
 -eq 等于
+
 -gt 大于
+
 -ge 大于等于
+
 -ne 不等于
+
 -r 读权限
+
 -w 写权限
+
 -x 有执行的权限
+
 -f 文件存在并且是一个常规的文件
+
 -s 文件存在且不为空
+
 -d 文件存在并是一个目录
+
 -b 文件存在并且是一个块设备
+
 -L 链接
+
 
 ### 函数
 function fun(){
@@ -195,12 +217,13 @@ cat testfile | sort | uniq
 
 #### wc
 wc -l /etc/password #统计行数
+
 wc -w #统计单词出现的次数
+
 wc -m 统计文件的字符数 
 
-
-### sed todo
- 替换
+### sed 
+todo
 
 
 ### last
@@ -219,6 +242,7 @@ cat /etc/passwd | awk -F ':' 'BEGIN {print "name,shell"}' '{print $1"\t"$7}' END
 ```
 
 ### curl 
+
 -d http post方式传送数据
 
 -F 模拟http表单提交
