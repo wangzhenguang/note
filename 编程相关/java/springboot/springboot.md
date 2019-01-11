@@ -156,8 +156,8 @@ server:
 
 ```yaml
 user :
-	name: 张三
-	age: 18
+  name: 张三
+  age: 18
 # 行内写法
 user2 : {name: 张三,age: 18} 
 ```
@@ -166,8 +166,8 @@ user2 : {name: 张三,age: 18}
 
 ```yaml
 names: 
-	- 张三
-	- 李四
+  - 张三
+  - 李四
 # 行内写法
 names: [张三,李四]
 ```
@@ -176,26 +176,26 @@ names: [张三,李四]
 
 ```yaml
 person: 
-	id: ${random.uuid}
-	age: ${random.int}
+  id: ${random.uuid}
+  age: ${random.int}
 ```
 
 ##### 多文档块方式
 
-```yml
+```yaml
 #激活指定profile
 spring:
-	active: dev
+  active: dev
 ---
 server: 
-	port: 8081
+  port: 8081
 spring:
-	profiles: dev
+  profiles: dev
 ---
 server: 
-	port: 8082
+  port: 8082
 spring:
-	profiles: prod
+  profiles: prod
 ```
 
 
@@ -213,8 +213,6 @@ spring:
 
 
 ## springboot日志
-
----
 
 ### 日志适配统一
 
@@ -548,11 +546,45 @@ HandlerInterceptor
 
 ## 错误页面处理
 
+timestamp：时间戳
+
+status：状态吗
+
+error :错误提示
+
+exception：异常对象
+
+message：异常消息
+
+error：JSR303消息校验的错误
 
 
 
+##数据库相关
 
 
+
+## 配置嵌入式Servlet容器
+
+### 注册servlet filter listener
+
+### 使用其他Servlet容器
+
+Jetty 、Undertow(不支持jsp)
+
+ ### 使用外部servlet容器
+
+修改为war项目
+
+将嵌入式的Tomcat指定为provided
+
+编写一个SpringBootServletInitializer的实现类，复写configure方法
+
+> 自动生成上面步骤
+
+创建webapp目录
+
+创建web.xml
 
 
 
