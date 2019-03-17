@@ -450,9 +450,9 @@ hdfs-site.xml
 
 7. 如果数据不均衡可以执行 sbin/start-balancer.sh
 
-### 解决小文件存储-归档
+### 优化小文件
 
-归档将一个目录当做一个整体。
+- 将多个小文件打包成一个har文件，当做一个整体。减少namenode的内存使用
 
 ```shell
 #归档钱需要启动yarn
@@ -462,11 +462,17 @@ hadoop fs -lsr /testhar/test.har
 hadoop fs -lsr har:///test.har
 # 解归档文件
 hadoop fs -cp har:///test.har/test.file /
-
-
 ```
 
+- Sequence file
 
+  sequence file由二进制文件组成，key为文件名，value为文件内容。则可以将大批小文件合并成一个大文件。
+
+- CombineFileInputFormat
+
+  将多个文件合并成一个单独的split，另外它会考虑存储位置
+
+- 开启JVM重用
 
 ### 集群间的数据拷贝
 
@@ -534,7 +540,7 @@ mr-jobhistory-daemon.sh start historyserver
 | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---------------------------------------- |
 | io.compression.codecs (core-site.xml)                        | org.apache.hadoop.io.compress.DefaultCodec,<br />org.apache.hadoop.io.compress.GzipCodec,<br />org.apache.hadoop.io.compress.BZip2Codec | 输入压缩       | hadoop会根据后缀自动判断是否支持编码     |
 | mapreduce.map.output.compress(mapred-site.xml)               | false                                                        | mapper输出阶段 |                                          |
-| mapreduce.map.output.compress.codec(mapred-site.xml)         | org.apache.hadoop.io.compress.DefaultCodec                   | mapper输出阶段 | 这阶段一般使用LZO、Snappy编码器          |
+| mapreduce.map.output.compress.codec(mapred-site.xml)         | org.apache.hadoop.io.compress.DefaultCodec<br />（org.apache.hadoop.io.compress.SnappyCodec） | mapper输出阶段 | 这阶段一般使用LZO、Snappy编码器          |
 | mapreduce.output.fileoutputformat.compress(mapred-site.xml)  | false                                                        | reducer输出    |                                          |
 | mapreduce.output.fileoutputformat.compress.codec(mapred-site.xml) | org.apache.hadoop.io.compress.DefaultCodec                   | reducer输出    | 使用标准工具或gzip、bzip2                |
 | mapreduce.output.fileoutputformat.compress.type              | RECORD                                                       | reducer输出    | sequenceFile输出使用的压缩类型：NODE、BL |
@@ -725,4 +731,32 @@ Hadoop调度器有三种：FIFO、Capacity Scheduler 、Fair Scheduler。
     </property>
 </configuration>
 ```
+
+
+
+## 配置Snappy压缩
+
+```shell
+# 之前安装好hadoop编译的其他环境 mvn、jdk、ant、protobuf 等
+# 编译安装 Snappy
+tar -zxvf snappy-1.1.3
+./configure
+make && make install
+# 编译hadoop支持snappy名ing
+mvn clean package -DskipTests -Pdist,native -Dtar -Dsnappy.lib=/usr/local/lib -Dbundle.snappy
+
+# 各个软件的版本
+hadoop 2.8.5
+protobuf 2.5.0
+ant 1.9.13
+jdk 1.8
+mvn 3.10.0
+snappy-1.1.3
+```
+
+
+
+
+
+
 

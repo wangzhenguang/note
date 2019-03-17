@@ -21,6 +21,8 @@ docker pull mysql:5.0.0
 docker images
 # 删除
 docker rmi image-id
+# 复制文件到容器
+docker cp src_path container:dest_path
 ```
 
 
@@ -390,10 +392,6 @@ docker attach container_id
 # -i 参数时，没有分配伪终端 推荐这种进入容器
 docker exec -i container_id bash
 docker exec -it container_id bash
-
-
-
-
 ```
 
 ### 导入导出容器
