@@ -29,17 +29,17 @@ JNIEnv类中的常用函数
 
 #### java类型和native中类型映射关系
 ---
-|java类型|本地类型 | jni定义的别名|
-|--|---|----|
-| int | long | jint/jsize|
-long |_int64 | jlong
-byte | signed char | jbyte
-boolean | unsigned char | jboolean 
-char | unsigined short | jchar 
-short | short | jshort
-float |　float | jfloat|
-double  | double | jdouble
-Object | _jobject* | jobject
+| java类型 | 本地类型 | jni定义的别名 |
+| -------- | -------- | ------------- |
+| int | long | jint | jsize|
+|long |_int64 | jlong|
+|byte | signed char | jbyte|
+|boolean | unsigned char | jboolean |
+|char | unsigined short | jchar |
+|short | short | jshort|
+|float |　float | jfloat||
+|double  | double | jdouble|
+|Object | _jobject* | jobject|
 
 
 #### jclass 类型
@@ -59,20 +59,20 @@ GetFieldID(jclass clazz,const char* name ,const char* sign)
 GetMethodID(jclass clazz,const char* name,const char* sign)
 
 **签名格式对照表**
-| 类型 | 相应的签名| 
+| 类型 | 相应的签名|
 |---|--------------|
-boolean | Z 
-byte | B
-char | C
-short | S
-int | I 
-long | J
-float | F
-double | D
-void | V
-object | L用/分割包完整类名（Ljava/lang/String)
-Array | [签名 [I [Ljava/lang/String
-Method | (参数类型签名...)返回值类型签名
+|boolean | Z |
+|byte | B|
+|char | C|
+|short | S|
+|int | I |
+|long | J|
+|float | F|
+|double | D|
+|void | V|
+|object | L用/分割包完整类名（Ljava/lang/String)|
+|Array | [签名 [I [Ljava/lang/String|
+|Method | (参数类型签名...)返回值类型签名|
 
 
 ### JNIEnv类型中方法的使用

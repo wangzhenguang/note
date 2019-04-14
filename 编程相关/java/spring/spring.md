@@ -2,6 +2,40 @@
 
 
 
+## spring-bean配置
+
+spring三种主要装配配置：
+
+- 在XML中进行显示配置
+- 在Java中进行显示配置
+- 隐式的bean发现机制和自动装配
+
+@ComponentScan、Configuration、@Component
+
+```xml
+<context:component-scan></context:component-scan>
+```
+
+### 注解配置方式
+
+用到的注解 @ComponentScan、Configuration、@Component
+
+@Configuration
+
+
+
+
+
+### xml配置方式
+
+
+
+
+
+
+
+
+
 ### DI
 
 ```java

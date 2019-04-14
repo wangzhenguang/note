@@ -123,7 +123,7 @@ Netty定义了下面练个重要的ChannelHandler子接口
 - ChannelInboundHandler -- 处理入站数据以及各种状态变化
 - ChannelOutboundHandler -- 处理出站数据并且允许拦截所有的操作
 
-### ChannelInboundHandler的声明周期方法
+### ChannelInboundHandler的方法
 
 |           方法            | 描述                                                         |
 | :-----------------------: | ------------------------------------------------------------ |
@@ -133,7 +133,46 @@ Netty定义了下面练个重要的ChannelHandler子接口
 |      channelInactive      | 当Channel离开活动状态并且不再连接它的远程节点时被调用        |
 |    channelReadComplete    | 当Channel上的一个读操作完成时被调用（所有可读字节都已经从Channel中读取） |
 |        channelRead        | 当从Channel中读取数据时被调用                                |
-| ChannelWritabilityChanged | 当Channel的可写状态发生改变时被调用。用户可以确保写操作不会完成的太快（以避免发生OutOfMemoryError)或者可以在Channel变为再次可写时回复写入。可以通过调用Channel的isWritable()方法来检测。 |
-|                           |                                                              |
-|                           |                                                              |
+| ChannelWritabilityChanged | 当Channel的可写状态发生改变时被调用。用户可以确保写操作不会完成的太快（以避免发生OutOfMemoryError)或者可以在Channel变为再次可写时回复写入。可以通过调用Channel的isWritable()方法来检测。与可写性相关的阈值可以通过Channel.config().setWriteHighWaterMark()和Channel.config().setWriteLowWaterMark()方法来设置。 |
+|    userEventTriggered     | 当ChannelnboundHandler.fireUserEventTriggered()方法被调用时被调用，因为一个POJO被传经了ChannelPipeline |
+
+### ChannelOutboundHandler接口
+
+出站操作和数据将由ChannelOutboundHandler处理。它的方法将呗Channel、ChannelPipeline以及ChannelHandlerContext调用。
+
+ChannelOutBoundHandler的一个强大的功能是可以按需推迟操作或者事件，这使得可以通过一些复杂的方法来处理请求。
+
+**channeloutboundHandler的方法**
+
+| 方法                                                         | 描述                                            |
+| :----------------------------------------------------------- | ----------------------------------------------- |
+| bind(ChannelHandlerContext,SocketAddress,ChannelPromise)     | 当请求将Channel绑定到本地地址时被调用           |
+| connect(ChannelHandlerContext,SocketAddress,SocketAddress,ChannelPromise) | 当请求将Channel连接到远程节点时被调用           |
+| disconnect(ChannelHandlerContext,ChannelPromise)             | 当请求将Channel从远程节点断开时被调用           |
+| close(ChannelHandlerContext,ChannelPromise)                  | 请求关闭Channel时调用                           |
+| deregister(ChannelHandlerContext,ChannelPromis)              | 当请求将Channel从它的EventLoop注销时被调用      |
+| read(ChannelHandlerContext)                                  | 当请求从Channel读取更多的数据时被调用           |
+| flush(ChannelHandlerContext)                                 | 当请求通过Channel将入队数据冲刷到远程节点时调用 |
+| write(ChannelHandlerContext,Object,ChannelPromise)           | 请求通过Channel将数据写到远程节点时被调用       |
+
+
+
+
+
+###资源管理
+
+netty中4中泄露检测级别
+
+| 级别     | 描述                                                         |
+| -------- | ------------------------------------------------------------ |
+| DISABLED | 禁用泄露检测。只有在相近的测试之后才应设置为这个值           |
+| SIMPLE   | 使用1%的默认采样率检测并报告任何发现的谢罗。默认级别         |
+| ADVANCED | 使用默认的采样率，报告所发现的任何的泄露以及对应的消息被访问的位置 |
+| PARANOID | 类似ADVANCED，但是其将会对每次访问都采样。应只在调试阶段使用 |
+
+> 如果一个消息被丢弃或者消费，并且没有传递个ChannelPipline中的下一个ChannelOutboundHandler，那么用户就有责任调用ReferenceCountUtil.release()。如果消息到达了实际的传输层，那么当它呗写入时或者Channel关闭时，都将被自动释放。
+
+
+
+
 
