@@ -1,7 +1,5 @@
 # springboot
 
-## springboot hello world
-
 
 
 ### 自动配置过程
@@ -525,6 +523,67 @@ Special tokens:
 ```xml
 <div th:replace="footer::#footer(activeUri='main')"></div>
 ```
+
+
+
+
+
+### 配置SSl
+
+生成keystore
+
+```shell
+keytool -genkey -alias test -keyalg RSA -keysize 2048 -keystore ./keystore -validity 1024
+```
+
+- genkey 创建一个新的秘钥
+- -alias keystore的别名
+- -keyalg 使用的加密算法
+- -keysize 秘钥长度
+- -keystore 存放位置
+- validity 有效时间，单位为天
+
+springboot中配置:
+
+```yaml
+server:
+	ssl:
+		key-store: keystore
+		key-alias: test
+		key-store-password: 123
+```
+
+springboot中不能在配置文件同时启动两个端口，可以将http重定向为https请求
+
+```java
+  @Bean
+    public TomcatServletWebServerFactory tomcatServletWebServerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory() {
+            @Override
+            protected void postProcessContext(Context context) {
+                SecurityConstraint constraint = new SecurityConstraint();
+                constraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/*");
+                constraint.addCollection(collection);
+                context.addConstraint(constraint);
+            }
+        };
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(8080);
+        connector.setSecure(false);
+        connector.setRedirectPort(8443);
+        factory.addAdditionalTomcatConnectors(connector);
+        return factory;
+    }
+```
+
+
+
+
+
+
 
 ## 国际化
 
