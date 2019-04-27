@@ -232,7 +232,8 @@ class DataSourceConfig{
 ### xml中配置profile
 
 ```xml
-<beans profile="dev"> 
+<beans profile="dev"> 、
+    <!--使用嵌入式数据库-->
 	<jdbc:embedded-database id="dataSource">
     	<jdbc:script location="classpath:schema.sql"/>
         <jdbc:script location="classpath:test-data.sql"/>
@@ -289,9 +290,49 @@ spring在确定哪个profile处于激活状态时，需要读取两个属性（s
 </web-app>
 ```
 
+### 条件化创建bean( @Conditional)
+
+```java
+public interface Condition{
+    boolean matches(ConditionContext ctxt,AnnotatedTypeMetadata metadata);
+}
+
+public interface ConditionContext{
+    BeanDefinitionRegistry getRegistry();
+    ConfigurableListableBeanFactory getBeanFactory();
+    Environment getEnvironmen();
+    ResourceLoader getResourceLoader();
+    ClassLoader getClassLoader();
+}
+
+public interface AnnotatedTypeMetadata{
+    boolean isAnnotated(String annotationType);
+    Map<String,Object> getAnnotationAttributes(String annotationType);
+    Map<String,Object> getAnnotationAttributes(String annotationType,boolean calssValuesAsString);
+    MultiValueMap<String,Object> getAllAnnotationAttributes(String annotationType);
+    MultiValueMap<String,Object> getAllAnnotationAttributes(String annotationType,boolean classValuesAsString);
+}
+```
+
+通过ConditionContext, 可以做到如下几点：
+
+- getRegistry()返回的BeanDefinitionRegistry 检查bean的定义
+- 借助getBeanFactory ()返回的ConfigurableListableBeanFactory检查Bean是否存在，甚至探查bean的属性
+- 借助getEnvironmen() 返回的Environment检查环境变量是否存在以及它的值是什么
+- 读取并探查getResourceLoader()返回的ResourceLoader所加载的资源；
+- 借助getClassLoader()返回的ClassLoader加载并检查是否存在。
+
+通过 AnnotatedTypeMetadata 的isAnnotated() 能够判断带有@Bean注解的方法是不是还有其他特定的注解，其他方法能检查注解方法上的其他注解属性。
 
 
-## 
+
+### 处理自动装配的歧义性
+
+当spring装配bean的时候，发现没有唯一、无歧义的可选值的时候。会抛出NoUniqueBeanDefinitionException
+
+
+
+
 
 
 
