@@ -463,6 +463,8 @@ spel运算符
 
 ### 切面 AOP
 
+
+
 spring提供了4种类型的AOP支持
 
 - 基于代理的Spring aop
@@ -474,6 +476,23 @@ spring只支持方法级别的连接点。
 
  ![](../../../img/aop.png)
 
+### 相关依赖
+
+```xml
+  <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+```
+
 
 
 #### 注解创建切面 
@@ -481,11 +500,11 @@ spring只支持方法级别的连接点。
 ```java
 @Aspect
 public class Example{
-  @Before("execution(** com.example.Foo.foo(..))")
+  @Before("execution(* com.example.Foo.foo(..))")
   public void before(){} // foo方法调用之前
-  @AfterReturning("execution(** com.example.Foo.foo(..))")
+  @AfterReturning("execution(* com.example.Foo.foo(..))")
   public void after(){}//  foo方法调用之后
-  @AfterThrowing("execution(** com.example.Foo.foo(..))")
+  @AfterThrowing("execution(* com.example.Foo.foo(..))")
   public void error(){}// foo方法调用出现异常时
 }
 ```
@@ -503,7 +522,7 @@ public class Example{
 ````java
 @Aspect
 public class Example{
-  @Pointcut("execution(** com.example.Foo.foo(..))")
+  @Pointcut("execution(* com.example.Foo.foo(..))")
   public void foo(){}
   @Before("foo()")
   public void before(){} // foo方法调用之前
@@ -536,25 +555,27 @@ JavaConfig使用@EnableAspectJAutoProxy开启
 
 ```xml
 
-<bean id="example" class="com.example.Example"/>
-<aop:config>
-	<aop:aspect ref="example">
-  	<aop:before 
-         pointcut="execution(** com.example.Foo.foo(**))"
-         method="before"/>
-  </aop:aspect>
-  	<aop:after-return 
-         pointcut="execution(** com.example.Foo.foo(**))"
-         method="after"/>
-  </aop:aspect>
-</aop:config>
+  <aop:config>
+        <aop:aspect ref="event">
+            <aop:before
+                    pointcut="execution(* com.example.aop.TestService.testxml(..))"
+                    method="before"/>
+            <aop:after-returning
+                    pointcut="execution(* com.example.aop.TestService.testxml(..))"
+                    method="after"/>
+        </aop:aspect>
+    </aop:config>
 
-<!--定义切点-->
-<aop:config>
-	<aop:aspect ref="example">
-  	<aop:pointcut id="foo" expression="execution(** com.example.Foo.foo(**))"/>
-    <aop:before pointcut-ref="foo" method="before"/>
-</aop:config>
+    <!--定义切点-->
+    <aop:config>
+        <!--定义切点再引用 简化-->
+        <aop:pointcut id="testService" expression="execution(* com.example.aop.TestService.testxml(..))"/>
+
+        <aop:aspect ref="event">
+            <aop:before pointcut-ref="testService" method="before"/>
+            <aop:after-returning pointcut-ref="testService" method="after"/>
+        </aop:aspect>
+    </aop:config>
  
 ```
 
